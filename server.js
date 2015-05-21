@@ -18,11 +18,23 @@ server.connection({
 server.views({
   defaultExtension: 'jsx',
   engines: {
+    html: engine,
     jsx: require('hapi-react')(options),
     js: engine
   },
-  path: viewPaths
+  path: viewPaths + '/components'
 });
+
+// server.views({
+//   defaultExtension: 'html',
+//   engines: {
+//     jsx: require('hapi-react')(options),
+//     js: engine
+//   },
+//   relativeTo: __dirname,
+//   path: './views',
+//   partialsPath: './views/partials'
+// });
 
 server.route({
   method: 'GET',
