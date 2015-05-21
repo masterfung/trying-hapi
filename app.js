@@ -1,8 +1,13 @@
 "use-strict";
 
 var Hapi = require('hapi');
+var engine = require('hapi-react')();
+var Path = require('path');
 
 var server = new Hapi.Server();
+
+const viewPaths = Path.join(__dirname, "views");
+var options = {beautify: true};
 
 server.connection({
   port: 3000,
@@ -10,11 +15,30 @@ server.connection({
   labels: ['web']
 });
 
+server.views({
+  defaultExtension: 'jsx',
+  engines: {
+    jsx: require('hapi-react')(options),
+    js: engine
+  },
+  path: viewPaths
+});
+
 server.route({
   method: 'GET',
   path: '/',
   handler: function(req, res) {
-    res('Hello World')
+    res.view('index', {
+      name: "Johnny"
+    })
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/{name}',
+  handler: function(req, res) {
+    res('Hello' + encodeURIComponent(req.params.name) + '!')
   }
 });
 
