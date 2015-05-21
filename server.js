@@ -25,17 +25,6 @@ server.views({
   path: viewPaths + '/components'
 });
 
-// server.views({
-//   defaultExtension: 'html',
-//   engines: {
-//     jsx: require('hapi-react')(options),
-//     js: engine
-//   },
-//   relativeTo: __dirname,
-//   path: './views',
-//   partialsPath: './views/partials'
-// });
-
 server.route({
   method: 'GET',
   path: '/',
@@ -54,9 +43,28 @@ server.route({
   }
 });
 
-server.start(function(err) {
-  if (err) {
-    console.log("Something went wrong: "+ err);
+server.register({
+  register: require('good'),
+  options: {
+    reporters: [{
+      reporter: require('good-console'),
+      events:{ response: '*' }
+    }]
   }
-  console.log('Hapi Server is running on port 3000!');
+}, function (err) {
+
+  if (err) {
+    throw err;
+  }
+
+  // Starting the server
+
+  server.start(function(err) {
+    if (err) {
+      console.log("Something went wrong: "+ err);
+    }
+    console.log('Hapi Server is running on port 3000!');
+  });
+
+
 });
